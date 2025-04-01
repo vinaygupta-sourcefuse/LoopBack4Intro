@@ -4,12 +4,12 @@ import {juggler} from '@loopback/repository';
 const config = {
   name: 'mysql',
   connector: 'mysql',
-  url: 'mysql://vinay:password@localhost/bms',
+  url: 'mysql://vinay:password@localhost/bmslbs',
   host: 'localhost',
   port: 3306,
   user: 'vinay',
   password: 'password',
-  database: 'bms'
+  database: 'bmslbs'
 };
 
 // Observe application's life cycle to disconnect the datasource when
