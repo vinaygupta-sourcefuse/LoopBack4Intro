@@ -20,7 +20,7 @@ import {
 import {Book} from '../models';
 import {BookRepository} from '../repositories';
 
-export class BookControllerController {
+export class BookmodelController {
   constructor(
     @repository(BookRepository)
     public bookRepository : BookRepository,
@@ -37,12 +37,12 @@ export class BookControllerController {
         'application/json': {
           schema: getModelSchemaRef(Book, {
             title: 'NewBook',
-            exclude: ['isbn'],
+            exclude: ['id'],
           }),
         },
       },
     })
-    book: Omit<Book, 'isbn'>,
+    book: Omit<Book, 'id'>,
   ): Promise<Book> {
     return this.bookRepository.create(book);
   }
