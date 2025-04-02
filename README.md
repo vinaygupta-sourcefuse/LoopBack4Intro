@@ -23,3 +23,7 @@ now
 
 'my-loopback-app' is created for only to intro how juggler ORM integrates with mysql where a 'book' model is created
 
+and after creating that db(which is mentioned in data source) in workbench run migration
+
+```npm run migrate```
+
