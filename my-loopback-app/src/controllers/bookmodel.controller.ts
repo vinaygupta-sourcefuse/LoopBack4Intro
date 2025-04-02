@@ -1,36 +1,22 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
-} from '@loopback/rest';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
+import {post, param, get, getModelSchemaRef, patch, put, del, requestBody, response} from '@loopback/rest';
 import {Book} from '../models';
 import {BookRepository} from '../repositories';
+import {BookCreatorFn} from '../providers/book-creator.provider';
+import {inject} from '@loopback/core';
 
 export class BookmodelController {
   constructor(
     @repository(BookRepository)
-    public bookRepository : BookRepository,
+    public bookRepository: BookRepository,
+    @inject('providers.BookCreatorProvider') private createBook: BookCreatorFn,
   ) {}
 
   @post('/books')
   @response(200, {
     description: 'Book model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Book)}},
-  })
+    content: {'application/json': {schema: {}}}},
+  )
   async create(
     @requestBody({
       content: {
@@ -44,7 +30,7 @@ export class BookmodelController {
     })
     book: Omit<Book, 'id'>,
   ): Promise<Book> {
-    return this.bookRepository.create(book);
+    return  this.createBook(book);
   }
 
   @get('/books/count')
@@ -52,9 +38,7 @@ export class BookmodelController {
     description: 'Book model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(
-    @param.where(Book) where?: Where<Book>,
-  ): Promise<Count> {
+  async count(@param.where(Book) where?: Where<Book>): Promise<Count> {
     return this.bookRepository.count(where);
   }
 
@@ -70,9 +54,7 @@ export class BookmodelController {
       },
     },
   })
-  async find(
-    @param.filter(Book) filter?: Filter<Book>,
-  ): Promise<Book[]> {
+  async find(@param.filter(Book) filter?: Filter<Book>): Promise<Book[]> {
     return this.bookRepository.find(filter);
   }
 
@@ -106,7 +88,7 @@ export class BookmodelController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Book, {exclude: 'where'}) filter?: FilterExcludingWhere<Book>
+    @param.filter(Book, {exclude: 'where'}) filter?: FilterExcludingWhere<Book>,
   ): Promise<Book> {
     return this.bookRepository.findById(id, filter);
   }
@@ -133,10 +115,7 @@ export class BookmodelController {
   @response(204, {
     description: 'Book PUT success',
   })
-  async replaceById(
-    @param.path.number('id') id: number,
-    @requestBody() book: Book,
-  ): Promise<void> {
+  async replaceById(@param.path.number('id') id: number, @requestBody() book: Book): Promise<void> {
     await this.bookRepository.replaceById(id, book);
   }
 

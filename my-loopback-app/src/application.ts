@@ -9,6 +9,7 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import {BookCreatorProvider} from './providers/book-creator.provider';
 
 export {ApplicationConfig};
 
@@ -29,7 +30,7 @@ export class MyLoopbackAppApplication extends BootMixin(
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
-
+    this.bind('providers.BookCreatorProvider').toProvider(BookCreatorProvider);
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {
