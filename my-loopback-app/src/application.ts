@@ -8,7 +8,7 @@ import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
-import {MySequence} from './sequence';
+import {MyCustomSequence} from './sequence';
 import {BookCreatorProvider} from './providers/book-creator.provider';
 import {LogInterceptor} from './interceptors/log.interceptor';
 
@@ -20,8 +20,8 @@ export class MyLoopbackAppApplication extends BootMixin(
   constructor(options: ApplicationConfig = {}) {
     super(options);
 
-    // Set up the custom sequence
-    this.sequence(MySequence);
+     // Replace default sequence with our custom one
+     this.sequence(MyCustomSequence);
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
