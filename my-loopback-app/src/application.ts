@@ -10,6 +10,7 @@ import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
 import {BookCreatorProvider} from './providers/book-creator.provider';
+import {LogInterceptor} from './interceptors/log.interceptor';
 
 export {ApplicationConfig};
 
@@ -31,6 +32,9 @@ export class MyLoopbackAppApplication extends BootMixin(
     });
     this.component(RestExplorerComponent);
     this.bind('providers.BookCreatorProvider').toProvider(BookCreatorProvider);
+
+    this.interceptor(LogInterceptor); // ✅ Apply globally
+
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {

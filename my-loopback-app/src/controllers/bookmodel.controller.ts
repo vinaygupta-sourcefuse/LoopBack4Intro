@@ -3,7 +3,8 @@ import {post, param, get, getModelSchemaRef, patch, put, del, requestBody, respo
 import {Book} from '../models';
 import {BookRepository} from '../repositories';
 import {BookCreatorFn} from '../providers/book-creator.provider';
-import {inject} from '@loopback/core';
+import {inject, intercept} from '@loopback/core';
+import {LogInterceptor} from '../interceptors/log.interceptor';
 
 export class BookmodelController {
   constructor(
@@ -32,7 +33,7 @@ export class BookmodelController {
   ): Promise<Book> {
     return  this.createBook(book);
   }
-
+  
   @get('/books/count')
   @response(200, {
     description: 'Book model count',
@@ -41,7 +42,8 @@ export class BookmodelController {
   async count(@param.where(Book) where?: Where<Book>): Promise<Count> {
     return this.bookRepository.count(where);
   }
-
+  
+  @intercept('interceptors.LogInterceptor') // ✅ Apply interceptor only to this method
   @get('/books')
   @response(200, {
     description: 'Array of Book model instances',
