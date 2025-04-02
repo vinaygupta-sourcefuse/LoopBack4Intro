@@ -3,15 +3,23 @@ import {post, param, get, getModelSchemaRef, patch, put, del, requestBody, respo
 import {Book} from '../models';
 import {BookRepository} from '../repositories';
 import {BookCreatorFn} from '../providers/book-creator.provider';
-import {inject, intercept} from '@loopback/core';
-import {LogInterceptor} from '../interceptors/log.interceptor';
+import {inject, intercept, Context} from '@loopback/core';
 
 export class BookmodelController {
   constructor(
+    @inject.context() private ctx: Context,
     @repository(BookRepository)
     public bookRepository: BookRepository,
     @inject('providers.BookCreatorProvider') private createBook: BookCreatorFn,
   ) {}
+
+  @get('/context')
+  getContextInfo() {
+    const bindingKeys = this.ctx.find().map(binding => binding.key);
+    console.log('Context Bindings inside controller:', bindingKeys); // ✅ List registered bindings
+    return {bindings: bindingKeys};
+  }
+
 
   @post('/books')
   @response(200, {

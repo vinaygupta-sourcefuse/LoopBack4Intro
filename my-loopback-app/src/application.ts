@@ -1,5 +1,5 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
+import {ApplicationConfig, Context} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
@@ -20,6 +20,12 @@ export class MyLoopbackAppApplication extends BootMixin(
   constructor(options: ApplicationConfig = {}) {
     super(options);
 
+    this.bind('message').to('🚀 Hello from LoopBack Context in application.ts !'); // ✅ Bind a value
+
+    const ctx = new Context();
+    ctx.bind('app.name').to('My LoopBack App'); // ✅ Another context binding
+
+    console.log('Context in application.ts, ',ctx.getSync('app.name')); // Output: My LoopBack App
      // Replace default sequence with our custom one
      this.sequence(MyCustomSequence);
 
